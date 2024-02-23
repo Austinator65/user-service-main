@@ -8,14 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@Setter
-@Getter
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
 @Table(name = "user")
 public class User {
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "userId")
@@ -39,4 +39,12 @@ public class User {
   @Column(name = "phone_number")
   private String phoneNumber;
 
+  public User(String firstName, String lastName, String address, String city, String email, String phoneNumber) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.address = address;
+    this.city = city;
+    this.email = email;
+    this.phoneNumber = phoneNumber;
+  }
 }

@@ -1,16 +1,15 @@
 package com.example.userservice.controllers;
 
+import io.micrometer.core.ipc.http.HttpSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.userservice.dto.LoginDTO;
 import com.example.userservice.dto.UserDTO;
 import com.example.userservice.model.User;
 import com.example.userservice.service.AuthenticationService;
+
+import java.net.http.HttpClient;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,12 +29,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public void loginUser(@RequestBody LoginDTO login) {
+    public Object loginUser(@RequestBody LoginDTO login) {
 
         LoginDTO user = new LoginDTO(login.getEmail(), login.getPassword());
         authenticationService.loginUser(user);
 
-        // return authenticationService.loginUser(user);
+        HttpClient.Redirect.valueOf("/user");
+         return authenticationService.loginUser(user);
+
     }
 
 }

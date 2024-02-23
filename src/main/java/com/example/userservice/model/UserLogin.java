@@ -3,19 +3,10 @@ package com.example.userservice.model;
 import java.util.Collection;
 import java.util.Set;
 
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -41,7 +32,6 @@ public class UserLogin implements UserDetails {
 
     @Column(unique = true)
     private String email;
-
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -49,11 +39,21 @@ public class UserLogin implements UserDetails {
             @JoinColumn(name = "roleId") })
     private Set<Role> authorities;
 
+    @Column(name = "userId")
+    private int userid;
+
+    public UserLogin(String email, String password, int userid) {
+        this.email = email;
+        this.password = password;
+        this.userid = userid;
+
+    }
+
     public UserLogin(String email, String password) {
         this.email = email;
         this.password = password;
         // this.authorities = authorities;
-
+        
     }
 
     @Override

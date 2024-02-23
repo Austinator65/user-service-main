@@ -1,6 +1,8 @@
 package com.example.userservice.service;
 
+import java.sql.SQLOutput;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,28 +38,33 @@ public class AuthenticationService {
     public User registerUser(UserDTO user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
 
+        User person = new User(user.getFirstName(), user.getLastName(), user.getAddress(),
+                user.getCity(), user.getEmail(), user.getPhoneNumber());
        // Role userRole = roleRepository.findByAuthority("USER").get();
         System.out.println(user.getFirstName());
       //  Set<Role> authorities = new HashSet<>();
        // authorities.add(userRole);
-        userRepository.save(new UserLogin(user.getEmail(), encodedPassword));
-        return userLoginRepository.save(new User(0, user.getFirstName(), user.getLastName(), user.getAddress(),
-                user.getCity(), user.getEmail(), user.getPhoneNumber()));
+        userLoginRepository.save(person);
+        userRepository.save(new UserLogin(user.getEmail(), encodedPassword, person.getUserId()));
+
+        return person;
     }
 
-    public void loginUser(LoginDTO user) {
-        // String encodedPassword = passwordEncoder.encode(user.getPassword());
+    public Object loginUser(LoginDTO user) {
 
-        if (userLoginRepository.findByEmail(user.getEmail()).isPresent()) {
-            Role userRole = roleRepository.findByAuthority("USER").get();
-            System.out.println(userRole);
+         String encodedPassword = passwordEncoder.encode(user.getPassword());
+
+        if (userRepository.findByEmail(user.getEmail()).isPresent() || userRepository.findByPassword(encodedPassword).isPresent()) {
+            System.out.println("User Logged in");
+           // Role userRole = roleRepository.findByAuthority("USER").get();
+          //  System.out.println(userRole);
+            System.out.println("Login successfully");
+
+            return userLoginRepository.getUserByEmail(user.getEmail());
         } else {
             System.out.println("User not found");
+            return null;
         }
-        ;
-
-        // return userRepository.save(new AppUser(0, user.getEmail(), encodedPassword,
-        // authorities));
     }
 
 }
